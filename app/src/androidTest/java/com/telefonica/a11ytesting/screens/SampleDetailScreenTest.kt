@@ -1,0 +1,42 @@
+package com.telefonica.a11ytesting.screens
+
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.performClick
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.telefonica.a11ytesting.MainActivity
+import com.telefonica.a11ytesting.library.accessibility
+
+@RunWith(AndroidJUnit4::class)
+class SampleDetailScreenTest {
+    @get:Rule
+    val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    @Test
+    fun showSampleDetailScreen() {
+        composeTestRule.onNodeWithText("First Example")
+            .performClick()
+
+        composeTestRule.onNodeWithText("First Sample").assertIsDisplayed()
+
+        composeTestRule.accessibility {
+            elementChecks {
+                element(
+                    identifier = FirstSampleScreenTestTags.BACK_BUTTON_IMAGE,
+                    unmerged = true,
+                ).hasContentDescription("Back")
+            }
+
+            keyboardFocus {
+                assertFocusOn(FirstSampleScreenTestTags.BACK_BUTTON)
+                next() shouldFocus FirstSampleScreenTestTags.BOTTOM_BUTTON
+                next() shouldFocus FirstSampleScreenTestTags.BODY_BUTTON
+                next() shouldFocus FirstSampleScreenTestTags.BACK_BUTTON
+            }
+        }
+    }
+}

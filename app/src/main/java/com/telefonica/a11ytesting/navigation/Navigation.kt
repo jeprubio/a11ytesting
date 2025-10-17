@@ -6,13 +6,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.telefonica.a11ytesting.screens.HomeScreen
-import com.telefonica.a11ytesting.screens.SampleDetailScreen
+import com.telefonica.a11ytesting.screens.FirstSampleScreen
 
 sealed class Screen(val route: String) {
     object SampleList : Screen("sample_list")
-    object SampleDetail : Screen("sample_detail/{itemId}") {
-        fun createRoute(itemId: Int) = "sample_detail/$itemId"
-    }
+    object FirstSample : Screen("first_sample")
 }
 
 @Composable
@@ -25,16 +23,14 @@ fun A11yTestingNavigation(
     ) {
         composable(Screen.SampleList.route) {
             HomeScreen(
-                onItemClick = { itemId ->
-                    navController.navigate(Screen.SampleDetail.createRoute(itemId))
+                onFirstItemClicked = {
+                    navController.navigate(Screen.FirstSample.route)
                 }
             )
         }
 
-        composable(Screen.SampleDetail.route) { backStackEntry ->
-            val itemId = backStackEntry.arguments?.getString("itemId")?.toIntOrNull() ?: 1
-            SampleDetailScreen(
-                itemId = itemId,
+        composable(Screen.FirstSample.route) {
+            FirstSampleScreen(
                 onBackClick = {
                     navController.popBackStack()
                 }

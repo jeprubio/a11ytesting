@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">A11yTesting</string>
+    <string name="back_button_accessibility_description">Back</string>
 </resources>
