@@ -12,14 +12,13 @@ import com.telefonica.a11ytesting.MainActivity
 import com.telefonica.a11ytesting.library.accessibility
 
 @RunWith(AndroidJUnit4::class)
-class SampleDetailScreenTest {
+class FirstSampleScreenTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Test
     fun showSampleDetailScreen() {
-        composeTestRule.onNodeWithText("First Example")
-            .performClick()
+        loadFirstSampleScreen()
 
         composeTestRule.onNodeWithText("First Sample").assertIsDisplayed()
 
@@ -38,5 +37,25 @@ class SampleDetailScreenTest {
                 next() shouldFocus FirstSampleScreenTestTags.BACK_BUTTON
             }
         }
+    }
+
+    @Test
+    fun checkKeyboardBackwards() {
+        loadFirstSampleScreen()
+
+        composeTestRule.accessibility {
+
+            keyboardFocus {
+                assertFocusOn(FirstSampleScreenTestTags.BACK_BUTTON)
+                previous() shouldFocus FirstSampleScreenTestTags.BODY_BUTTON
+                previous() shouldFocus FirstSampleScreenTestTags.BOTTOM_BUTTON
+                previous() shouldFocus FirstSampleScreenTestTags.BACK_BUTTON
+            }
+        }
+    }
+
+    private fun loadFirstSampleScreen() {
+        composeTestRule.onNodeWithText("First Example")
+            .performClick()
     }
 }

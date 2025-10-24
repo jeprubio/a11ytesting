@@ -18,7 +18,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -27,35 +31,49 @@ import androidx.compose.ui.unit.dp
 import com.telefonica.a11ytesting.R
 
 @Composable
-fun FirstSampleScreen(
+fun SecondSampleScreen(
     onBackClick: () -> Unit
 ) {
+    val backButtonRequester = remember { FocusRequester() }
+    val bodyButtonRequester = remember { FocusRequester() }
+    val bottomButtonRequester = remember { FocusRequester() }
+
     Scaffold(
         topBar = {
-            Heading(onBackClick)
+            Heading(onBackClick, backButtonRequester, bodyButtonRequester, bottomButtonRequester)
         },
         bottomBar = {
-            Footer()
+            Footer(backButtonRequester, bottomButtonRequester, bodyButtonRequester)
         }
     ) { paddingValues ->
-        Body(paddingValues)
+        Body(paddingValues, bodyButtonRequester, backButtonRequester, bottomButtonRequester)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Heading(onBackClick: () -> Unit) {
+private fun Heading(
+    onBackClick: () -> Unit,
+    backButtonRequester: FocusRequester,
+    bodyButtonRequester: FocusRequester,
+    bottomButtonRequester: FocusRequester,
+) {
     TopAppBar(
-        title = { Text("First Sample") },
+        title = { Text("Second Sample") },
         navigationIcon = {
             IconButton(
                 onClick = onBackClick,
-                modifier = Modifier.testTag(FirstSampleScreenTestTags.BACK_BUTTON),
+                modifier = Modifier
+                    .testTag(SecondSampleScreenTestTags.BACK_BUTTON)
+                    .focusRequester(backButtonRequester).focusProperties {
+                        next = bodyButtonRequester
+                        previous = bottomButtonRequester
+                    },
             ) {
                 Icon(
                     painter = painterResource(R.drawable.arrow_back_24dp),
                     contentDescription = stringResource(R.string.back_button_accessibility_description),
-                    modifier = Modifier.testTag(FirstSampleScreenTestTags.BACK_BUTTON_IMAGE),
+                    modifier = Modifier.testTag(SecondSampleScreenTestTags.BACK_BUTTON_IMAGE),
                 )
             }
         }
@@ -63,7 +81,12 @@ private fun Heading(onBackClick: () -> Unit) {
 }
 
 @Composable
-private fun Body(paddingValues: PaddingValues) {
+private fun Body(
+    paddingValues: PaddingValues,
+    bodyButtonRequester: FocusRequester,
+    backButtonRequester: FocusRequester,
+    bottomButtonRequester: FocusRequester,
+) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -95,7 +118,12 @@ private fun Body(paddingValues: PaddingValues) {
             onClick = {
                 Toast.makeText(context, "Body Button clicked!", Toast.LENGTH_SHORT).show()
             },
-            modifier = Modifier.testTag(FirstSampleScreenTestTags.BODY_BUTTON)
+            modifier = Modifier
+                .testTag(SecondSampleScreenTestTags.BODY_BUTTON)
+                .focusRequester(bodyButtonRequester).focusProperties {
+                    previous = backButtonRequester
+                    next = bottomButtonRequester
+                }
         ) {
             Text(
                 text = "Body Button",
@@ -105,7 +133,11 @@ private fun Body(paddingValues: PaddingValues) {
 }
 
 @Composable
-private fun Footer() {
+private fun Footer(
+    backButtonRequester: FocusRequester,
+    bottomButtonRequester: FocusRequester,
+    bodyButtonRequester: FocusRequester,
+) {
     val context = LocalContext.current
     BottomAppBar {
         Button(
@@ -113,8 +145,12 @@ private fun Footer() {
                 Toast.makeText(context, "Bottom Button clicked!", Toast.LENGTH_SHORT).show()
             },
             modifier = Modifier
-                .fillMaxWidth()
-                .testTag(FirstSampleScreenTestTags.BOTTOM_BUTTON)
+                            .fillMaxWidth()
+                            .testTag(SecondSampleScreenTestTags.BOTTOM_BUTTON)
+                .focusRequester(bottomButtonRequester).focusProperties {
+                    previous = bodyButtonRequester
+                    next = backButtonRequester
+                }
                 .padding(horizontal = 16.dp)
         ) {
             Text("Sample Action")
@@ -122,9 +158,9 @@ private fun Footer() {
     }
 }
 
-object FirstSampleScreenTestTags {
-    const val BACK_BUTTON = "first_sample_screen_back_button"
-    const val BACK_BUTTON_IMAGE = "first_sample_screen_back_button_image"
-    const val BODY_BUTTON = "first_sample_screen_body_button"
-    const val BOTTOM_BUTTON = "first_sample_screen_bottom_button"
+object SecondSampleScreenTestTags {
+    const val BACK_BUTTON = "second_sample_screen_back_button"
+    const val BACK_BUTTON_IMAGE = "second_sample_screen_back_button_image"
+    const val BODY_BUTTON = "second_sample_screen_body_button"
+    const val BOTTOM_BUTTON = "second_sample_screen_bottom_button"
 }

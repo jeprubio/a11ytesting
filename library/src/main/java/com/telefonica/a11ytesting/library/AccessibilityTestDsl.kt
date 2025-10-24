@@ -110,6 +110,7 @@ class KeyboardA11y(private val rule: ComposeTestRule) {
         rule.onNodeWithTag(tag, useUnmergedTree = unmerged).assertIsFocused()
         return this
     }
+
     class FocusStep(
         private val rule: ComposeTestRule,
         private val parent: KeyboardA11y

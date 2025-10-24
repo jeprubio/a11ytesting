@@ -19,7 +19,8 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onFirstItemClicked: () -> Unit
+    onFirstItemClicked: () -> Unit,
+    onSecondItemClicked: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -45,6 +46,22 @@ fun HomeScreen(
                 ) {
                     Text(
                         text = "First Example",
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .padding(vertical = 24.dp, horizontal = 16.dp)
+                    )
+                }
+            }
+            item {
+                Card(
+                    onClick = onSecondItemClicked,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text(
+                        text = "Second Example",
                         style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier
                             .padding(vertical = 24.dp, horizontal = 16.dp)
