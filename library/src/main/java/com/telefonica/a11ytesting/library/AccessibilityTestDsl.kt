@@ -124,6 +124,44 @@ class ElementAccessibility(
             )
         }
 
+    fun isHeading(): ElementAccessibility =
+        assertWithTreeDump("expected element to be marked as heading") {
+            assert(
+                SemanticsMatcher("is heading") { semanticsNode ->
+                    semanticsNode.config.contains(SemanticsProperties.Heading)
+                }
+            )
+        }
+
+    fun isNotHeading(): ElementAccessibility =
+        assertWithTreeDump("expected element to NOT be marked as heading") {
+            assert(
+                SemanticsMatcher("is not heading") { semanticsNode ->
+                    !semanticsNode.config.contains(SemanticsProperties.Heading)
+                }
+            )
+        }
+
+    fun hasText(expectedText: String): ElementAccessibility =
+        assertWithTreeDump("expected text='$expectedText'") {
+            assert(
+                SemanticsMatcher("has text '$expectedText'") { semanticsNode ->
+                    val textList = semanticsNode.config.getOrNull(SemanticsProperties.Text)
+                    textList?.any { it.text == expectedText } == true
+                }
+            )
+        }
+
+    fun hasTextContaining(partialText: String): ElementAccessibility =
+        assertWithTreeDump("expected text containing '$partialText'") {
+            assert(
+                SemanticsMatcher("text contains '$partialText'") { semanticsNode ->
+                    val textList = semanticsNode.config.getOrNull(SemanticsProperties.Text)
+                    textList?.any { it.text.contains(partialText, ignoreCase = true) } == true
+                }
+            )
+        }
+
 
     private inline fun assertWithTreeDump(
         description: String,

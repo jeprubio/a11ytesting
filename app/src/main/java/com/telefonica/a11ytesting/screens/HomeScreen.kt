@@ -22,6 +22,7 @@ fun HomeScreen(
     onFirstItemClicked: () -> Unit,
     onSecondItemClicked: () -> Unit,
     onThirdItemClicked: () -> Unit,
+    onFourthItemClicked: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -79,6 +80,22 @@ fun HomeScreen(
                 ) {
                     Text(
                         text = "Third Example",
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .padding(vertical = 24.dp, horizontal = 16.dp)
+                    )
+                }
+            }
+            item {
+                Card(
+                    onClick = onFourthItemClicked,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text(
+                        text = "Fourth Example",
                         style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier
                             .padding(vertical = 24.dp, horizontal = 16.dp)
