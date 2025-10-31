@@ -11,10 +11,10 @@
       <SelectionState runConfigName="FirstSampleScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ThirdSampleScreenTest">
+      <SelectionState runConfigName="FourthSampleScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="FourthSampleScreenTest">
+      <SelectionState runConfigName="SecondSampleScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

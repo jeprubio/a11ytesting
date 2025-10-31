@@ -31,6 +31,7 @@ class SecondSampleScreenTest {
             }
 
             keyboardFocus {
+                prepareFocus()
                 assertFocusOn(SecondSampleScreenTestTags.BACK_BUTTON)
                 next() shouldFocus SecondSampleScreenTestTags.BODY_BUTTON
                 next() shouldFocus SecondSampleScreenTestTags.BOTTOM_BUTTON
@@ -46,6 +47,7 @@ class SecondSampleScreenTest {
         composeTestRule.accessibility {
 
             keyboardFocus {
+                prepareFocus()
                 assertFocusOn(SecondSampleScreenTestTags.BACK_BUTTON)
                 previous() shouldFocus SecondSampleScreenTestTags.BOTTOM_BUTTON
                 previous() shouldFocus SecondSampleScreenTestTags.BODY_BUTTON

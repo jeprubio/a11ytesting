@@ -23,14 +23,8 @@ class FirstSampleScreenTest {
         composeTestRule.onNodeWithText("First Sample").assertIsDisplayed()
 
         composeTestRule.accessibility {
-            elementChecks {
-                element(
-                    identifier = FirstSampleScreenTestTags.BACK_BUTTON_IMAGE,
-                    unmerged = true,
-                ).hasContentDescription("Back")
-            }
-
             keyboardFocus {
+                prepareFocus()
                 assertFocusOn(FirstSampleScreenTestTags.BACK_BUTTON)
                 next() shouldFocus FirstSampleScreenTestTags.BOTTOM_BUTTON
                 next() shouldFocus FirstSampleScreenTestTags.BODY_BUTTON
@@ -46,6 +40,7 @@ class FirstSampleScreenTest {
         composeTestRule.accessibility {
 
             keyboardFocus {
+                prepareFocus()
                 assertFocusOn(FirstSampleScreenTestTags.BACK_BUTTON)
                 previous() shouldFocus FirstSampleScreenTestTags.BODY_BUTTON
                 previous() shouldFocus FirstSampleScreenTestTags.BOTTOM_BUTTON

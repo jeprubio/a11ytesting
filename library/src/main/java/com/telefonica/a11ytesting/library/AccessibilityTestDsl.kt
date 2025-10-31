@@ -18,6 +18,9 @@ import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.pressKey
 import androidx.compose.ui.test.printToLog
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import android.view.KeyEvent
 
 class AccessibilityTestDsl(private val composeTestRule: ComposeTestRule) {
     fun elementChecks(block: AccessibilityAssertions.() -> Unit) {
@@ -178,8 +181,28 @@ class ElementAccessibility(
 }
 
 class KeyboardA11y(private val rule: ComposeTestRule) {
+    private val uiDevice by lazy { UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()) }
+
     fun assertNoFocus(): KeyboardA11y {
         rule.onAllNodes(isFocused()).assertCountEquals(0)
+        return this
+    }
+
+    fun establishFocusWithUiAutomator(): KeyboardA11y {
+        uiDevice.pressKeyCode(KeyEvent.KEYCODE_TAB)
+        uiDevice.waitForIdle(1000)
+        rule.waitForIdle()
+        return this
+    }
+
+    fun prepareFocus(): KeyboardA11y {
+        val focusedNodes = rule.onAllNodes(isFocused())
+        if (focusedNodes.fetchSemanticsNodes().isNotEmpty()) {
+            println("A11Y - Focus already established!")
+        } else {
+            establishFocusWithUiAutomator()
+            println("A11Y - Using UiAutomator to establish focus")
+        }
         return this
     }
 
