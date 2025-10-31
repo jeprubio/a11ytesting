@@ -3,6 +3,7 @@ package com.telefonica.a11ytesting.library
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
@@ -55,10 +56,54 @@ class ElementAccessibility(
         assertWithTreeDump("expected contentDescription='$expected'") {
             assert(androidx.compose.ui.test.hasContentDescription(expected))
         }
+
+    fun hasContentDescriptionContaining(partialText: String): ElementAccessibility =
+        assertWithTreeDump("expected contentDescription containing '$partialText'") {
+            assert(
+                SemanticsMatcher("content description contains '$partialText'") { semanticsNode ->
+                    val list = semanticsNode.config.getOrNull(SemanticsProperties.ContentDescription)
+                    list?.any { it.contains(partialText, ignoreCase = true) } == true
+                }
+            )
+        }
+
+    fun hasContentDescriptionMatching(regex: Regex): ElementAccessibility =
+        assertWithTreeDump("expected contentDescription matching pattern '${regex.pattern}'") {
+            assert(
+                SemanticsMatcher("content description matches pattern '${regex.pattern}'") { semanticsNode ->
+                    val list = semanticsNode.config.getOrNull(SemanticsProperties.ContentDescription)
+                    list?.any { regex.matches(it) } == true
+                }
+            )
+        }
+
+    fun hasMergedContentDescription(): ElementAccessibility =
+        assertWithTreeDump("expected merged content description (multiple elements combined)") {
+            assert(
+                SemanticsMatcher("has merged content description") { semanticsNode ->
+                    val contentDescList = semanticsNode.config.getOrNull(SemanticsProperties.ContentDescription)
+                    val hasContentDesc = contentDescList?.isNotEmpty() == true
+
+                    val textList = semanticsNode.config.getOrNull(SemanticsProperties.Text)
+                    val hasText = textList?.isNotEmpty() == true
+
+                    // Check if this is a merged node by looking for clickable/selectable actions
+                    // and either content description or text (for buttons)
+                    val hasClickableAction = semanticsNode.config.contains(SemanticsActions.OnClick) ||
+                                           semanticsNode.config.contains(SemanticsProperties.Selected) ||
+                                           semanticsNode.config.contains(SemanticsProperties.Role)
+
+                    // Element has merged semantics if it has clickable actions and either content description or text
+                    (hasContentDesc || hasText) && hasClickableAction
+                }
+            )
+        }
+
     fun hasAnyContentDescriptionDefined(): ElementAccessibility {
         node.assert(SemanticsMatcher.keyIsDefined(SemanticsProperties.ContentDescription))
         return this
     }
+
     fun hasNonBlankContentDescription(): ElementAccessibility =
         assertWithTreeDump("expected non-blank contentDescription") {
             assert(
@@ -68,6 +113,18 @@ class ElementAccessibility(
                 }
             )
         }
+
+    fun hasNoContentDescription(): ElementAccessibility =
+        assertWithTreeDump("expected no contentDescription") {
+            assert(
+                SemanticsMatcher("has no content description") { semanticsNode ->
+                    val list = semanticsNode.config.getOrNull(SemanticsProperties.ContentDescription)
+                    list.isNullOrEmpty() || list.all { it.isBlank() }
+                }
+            )
+        }
+
+
     private inline fun assertWithTreeDump(
         description: String,
         crossinline block: SemanticsNodeInteraction.() -> Unit

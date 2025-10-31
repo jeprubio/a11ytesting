@@ -8,11 +8,13 @@ import androidx.navigation.compose.rememberNavController
 import com.telefonica.a11ytesting.screens.HomeScreen
 import com.telefonica.a11ytesting.screens.FirstSampleScreen
 import com.telefonica.a11ytesting.screens.SecondSampleScreen
+import com.telefonica.a11ytesting.screens.ThirdSampleScreen
 
 sealed class Screen(val route: String) {
     object SampleList : Screen("sample_list")
     object FirstSample : Screen("first_sample")
     object SecondSample : Screen("second_sample")
+    object ThirdSample : Screen("third_sample")
 }
 
 @Composable
@@ -31,6 +33,9 @@ fun A11yTestingNavigation(
                 onSecondItemClicked = {
                     navController.navigate(Screen.SecondSample.route)
                 },
+                onThirdItemClicked = {
+                    navController.navigate(Screen.ThirdSample.route)
+                },
             )
         }
 
@@ -44,6 +49,14 @@ fun A11yTestingNavigation(
 
         composable(Screen.SecondSample.route) {
             SecondSampleScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Screen.ThirdSample.route) {
+            ThirdSampleScreen(
                 onBackClick = {
                     navController.popBackStack()
                 }

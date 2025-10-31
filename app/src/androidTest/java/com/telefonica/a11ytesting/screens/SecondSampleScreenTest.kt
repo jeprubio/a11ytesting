@@ -17,7 +17,7 @@ class SecondSampleScreenTest {
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun showSampleDetailScreen() {
+    fun checkKeyboard() {
         loadSecondSampleScreen()
 
         composeTestRule.onNodeWithText("Second Sample").assertIsDisplayed()

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 fun HomeScreen(
     onFirstItemClicked: () -> Unit,
     onSecondItemClicked: () -> Unit,
+    onThirdItemClicked: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -62,6 +63,22 @@ fun HomeScreen(
                 ) {
                     Text(
                         text = "Second Example",
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .padding(vertical = 24.dp, horizontal = 16.dp)
+                    )
+                }
+            }
+            item {
+                Card(
+                    onClick = onThirdItemClicked,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text(
+                        text = "Third Example",
                         style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier
                             .padding(vertical = 24.dp, horizontal = 16.dp)
